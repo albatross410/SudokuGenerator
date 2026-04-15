@@ -1,0 +1,86 @@
+public class SudokuGenerator {
+    public static int[][] board = new int[9][9];
+    public static void main(String[] args) {
+        generateBoard();
+        printBoard();
+    }
+    
+    public static boolean generateBoard() {
+        for (int r = 0; r < 9; r++) {
+            for (int c = 0; c < 9; c++) {
+                if (board[r][c] == 0) {
+                    for (int n = 0; n < 9; n++) {
+                        int num = (int)(Math.random() * 9) + 1;
+                        board[r][c] = num;
+                        if (!checkRow(r) && !checkColumn(c) && !checkBox(r, c)) {
+                            if (generateBoard()) {
+                                return true;
+                            }
+                        }
+                        board[r][c] = 0;
+                    }
+                    return false;
+                }
+            }
+        }
+    return true;
+    }
+
+    public static boolean checkRow(int n) {
+        for (int c = 0; c < board.length; c++) {
+            for (int cc = c + 1; cc < board.length; cc++) {
+                if (board[n][c] != 0 && board[n][c] == board[n][cc]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public static boolean checkColumn(int n) {
+        for (int r = 0; r < board.length; r++) {
+            for (int rr = r + 1; rr < board.length; rr++) {
+                if (board[r][n] != 0 && board[r][n] == board[rr][n]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public static boolean checkBox(int row, int col) {
+        int startRow = row - row % 3;
+        int startCol = col - col % 3;
+        for (int r = startRow; r < startRow + 3; r++) {
+            for (int c = startCol; c < startCol + 3; c++) {
+                if (board[r][c] != 0) {
+                    for (int rr = startRow; rr < startRow + 3; rr++) {
+                        for (int cc = startCol; cc < startCol + 3; cc++) {
+                            if (!(r == rr && c == cc) && board[r][c] == board[rr][cc]) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+        
+    public static void printBoard() {
+        for (int r = 0; r < board.length; r++) {
+            if (r % 3 == 0) {
+                System.out.println("+-------+-------+-------+");
+            }
+            for (int c = 0; c < board[r].length; c++) {
+                if (c % 3 == 0) {
+                    System.out.print("| ");
+                }
+                System.out.print(board[r][c] + " ");
+            }
+            System.out.print("| ");
+            System.out.println();
+        }
+        System.out.println("+-------+-------+-------+");
+    }
+}
